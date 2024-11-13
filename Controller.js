@@ -1,5 +1,5 @@
 const mysql = require('mysql');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 //-----------------------------USUARIO-------------------------------------------
 // Agregar un usuario

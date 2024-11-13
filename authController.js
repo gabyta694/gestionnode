@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 exports.registrarUsuario = (req, res) => {
     const { nombre_usuario, rut, dv, correo_usuario, password, rol } = req.body;
