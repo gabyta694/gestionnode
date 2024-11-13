@@ -53,4 +53,7 @@ router.get('/evaluacion/:id', controller.VerEvaluacion); // Evaluacion unico
 //router.get('/historiales', controller.ListarHistoriales); // Listar todas las historiales
 //router.get('/historial/:id', controller.VerHistorial); // Historial unico
 
+//Rutas adicionales
+
+
 module.exports = router;
