@@ -6,7 +6,7 @@ const bodyParser = require('body-parser');
 
 const app = express();
 
-// Middleware para procesar JSON y datos de formularios//
+// Middleware para procesar JSON y datos de formularios
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
