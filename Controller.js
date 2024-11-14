@@ -518,13 +518,21 @@ exports.EliminarEvaluacion= (req, res) => {
 
 // Listar todas las evaluacion
 exports.ListarEvaluaciones = (req, res) => {
-  const sql = `SELECT * FROM evaluaciones`;
+  const sql = `
+    SELECT e.id_usuario, u.nombre_usuario, e.estado, e.desempeño, e.comentarios, e.fecha_evaluacion, 
+           p.nombre_proyecto, t.nombre_tarea
+    FROM evaluaciones e
+    JOIN usuarios u ON e.id_usuario = u.id_usuario
+    JOIN proyectos p ON e.id_proyecto = p.id_proyecto
+    JOIN tareas t ON e.id_tarea = t.id_tarea
+  `;
 
-  req.db.query(sql, (err, result) => {
+  req.db.query(sql, (err, results) => {
     if (err) {
-      return res.status(500).send({ error: 'Error al obtener las evaluaciones' });
+      console.error('Error al obtener las evaluaciones:', err);
+      return res.status(500).send({ error: 'Error al obtener las evaluaciones', details: err });
     }
-    res.status(200).send(result);
+    res.status(200).json(results);
   });
 };
 
