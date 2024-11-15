@@ -473,6 +473,7 @@ req.db.query(sql, [tareaId], (err, results) => {
 });
 };
 
+
 exports.VerTareasPorUsuario = (req, res) => {
   const usuarioId = req.params.id;
 
@@ -492,10 +493,10 @@ exports.VerTareasPorUsuario = (req, res) => {
 //-----------------------------EVALUACION-------------------------------------------
 // Agregar una evaluacion
 exports.AgregarEvaluacion = (req, res) => {
-  const { id_usuario, id_proyecto, id_tarea, estado, desempeño, comentarios, fecha_evaluacion } = req.body;
+  const { id_evaluacion, id_usuario, id_proyecto, id_tarea, estado, desempeño, comentarios, fecha_evaluacion } = req.body;
   
   // Verificar si se proporcionan todos los campos
-  if (!id_usuario || !id_proyecto || !id_tarea || !estado || !desempeño || !comentarios || !fecha_evaluacion) {
+  if (!id_evaluacion || !id_usuario || !id_proyecto || !id_tarea || !estado || !desempeño || !comentarios || !fecha_evaluacion) {
     return res.status(400).json({ error: 'Faltan campos requeridos' });
   }
 
@@ -519,10 +520,10 @@ exports.AgregarEvaluacion = (req, res) => {
     }
 
     // Consulta de inserción
-    const sql = `INSERT INTO evaluaciones (id_usuario, id_proyecto, id_tarea, estado, desempeño, comentarios, fecha_evaluacion)
+    const sql = `INSERT INTO evaluaciones (id_evaluacion, id_usuario, id_proyecto, id_tarea, estado, desempeño, comentarios, fecha_evaluacion)
                  VALUES (?, ?, ?, ?, ?, ?, ?)`;
 
-    req.db.query(sql, [id_usuario, id_proyecto, id_tarea, estado, desempeño, comentarios, fecha_evaluacion], (err, result) => {
+    req.db.query(sql, [id_evaluacion, id_usuario, id_proyecto, id_tarea, estado, desempeño, comentarios, fecha_evaluacion], (err, result) => {
       if (err) {
         console.error('Error al insertar la evaluacion:', err);
         return res.status(500).json({ error: 'Error al agregar la evaluacion', details: err });
@@ -536,10 +537,10 @@ exports.AgregarEvaluacion = (req, res) => {
 // Modificar una evaluacion
 exports.ModificarEvaluacion = (req, res) => {
   const evaluacionId = req.params.id;
-  const { id_usuario, id_proyecto, id_tarea, estado, desempeño, comentarios, fecha_evaluacion } = req.body;
-  const sql = `UPDATE evaluaciones SET id_usuario = ?, id_proyecto = ?, id_tarea = ?, estado = ?, desempeño = ?, comentarios = ?, fecha_evaluacion = ? WHERE id_evaluacion = ?`;
+  const { id_evaluacion, id_usuario, id_proyecto, id_tarea, estado, desempeño, comentarios, fecha_evaluacion } = req.body;
+  const sql = `UPDATE evaluaciones SET id_evaluacion = ?, id_usuario = ?, id_proyecto = ?, id_tarea = ?, estado = ?, desempeño = ?, comentarios = ?, fecha_evaluacion = ? WHERE id_evaluacion = ?`;
 
-  req.db.query(sql, [id_usuario, id_proyecto, id_tarea, estado, desempeño, comentarios, fecha_evaluacion, evaluacionId], (err, result) => {
+  req.db.query(sql, [id_evaluacion, id_usuario, id_proyecto, id_tarea, estado, desempeño, comentarios, fecha_evaluacion, evaluacionId], (err, result) => {
     if (err) {
       return res.status(500).send({ error: 'Error al modificar la evaluacion' });
     }
@@ -565,7 +566,7 @@ exports.EliminarEvaluacion= (req, res) => {
 // Listar todas las evaluacion
 exports.ListarEvaluaciones = (req, res) => {
   const sql = `
-    SELECT e.id_usuario, u.nombre_usuario, e.estado, e.desempeño, e.comentarios, e.fecha_evaluacion, 
+    SELECT e.id_evaluacion, id_usuario, u.nombre_usuario, e.estado, e.desempeño, e.comentarios, e.fecha_evaluacion, 
            p.nombre_proyecto, t.nombre_tarea
     FROM evaluaciones e
     JOIN usuarios u ON e.id_usuario = u.id_usuario
