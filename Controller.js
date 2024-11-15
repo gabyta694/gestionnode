@@ -325,19 +325,31 @@ req.db.query(sql, [proyectoId], (err, results) => {
 });
 };
 
-
+ // Ver Todos los Proyectos de 1 usuario
 exports.VerProyectosPorUsuario = (req, res) => {
   const usuarioId = req.params.id;
+  console.log('ID de Usuario recibido:', usuarioId);
 
-  const sql = 'SELECT * FROM proyectos WHERE id_usuario = ?';
+  const sql = `
+    SELECT DISTINCT p.*
+    FROM proyectos p
+    JOIN tareas t ON p.id_proyecto = t.id_proyecto
+    WHERE t.id_usuario_asignado = ?
+  `;
+
   req.db.query(sql, [usuarioId], (err, results) => {
     if (err) {
-      return res.status(500).send({ error: 'Error al obtener los proyectos' });
+      console.error('Error en la consulta SQL:', err);
+      return res.status(500).send({ error: 'Error al obtener los proyectos'});
     }
+
+    //console.log('Resultados de la consulta:', results);
+
     if (results.length === 0) {
-      return res.status(404).send({ error: 'No se encontraron proyectos para este usuario' });
+      return res.status(404).send({ error: 'Proyectos no encontrados para este usuario' });
     }
-    res.status(200).send(results);
+
+    res.status(200).send(results); // Enviar la respuesta al cliente
   });
 };
 
@@ -464,7 +476,7 @@ req.db.query(sql, [tareaId], (err, results) => {
 exports.VerTareasPorUsuario = (req, res) => {
   const usuarioId = req.params.id;
 
-  const sql = 'SELECT * FROM tareas WHERE id_usuario = ?';
+  const sql = 'SELECT * FROM tareas WHERE id_usuario_asignado = ?';
   req.db.query(sql, [usuarioId], (err, results) => {
     if (err) {
       return res.status(500).send({ error: 'Error al obtener las tareas' });
