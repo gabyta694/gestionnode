@@ -46,10 +46,10 @@ exports.AgregarUsuario = (req, res) => {
       console.log('ID recibido:', id);  // Verifica que el ID se esté recibiendo correctamente
     
       if (!nombre_usuario) return res.status(400).json({ error: 'El campo nombre_usuario es obligatorio' });
-  if (!rut) return res.status(400).json({ error: 'El campo rut es obligatorio' });
-  if (!dv) return res.status(400).json({ error: 'El campo dv es obligatorio' });
-  if (!correo_usuario) return res.status(400).json({ error: 'El campo correo_usuario es obligatorio' });
-  if (!rol) return res.status(400).json({ error: 'El campo rol es obligatorio' });
+      if (!rut) return res.status(400).json({ error: 'El campo rut es obligatorio' });
+      if (!dv) return res.status(400).json({ error: 'El campo dv es obligatorio' });
+      if (!correo_usuario) return res.status(400).json({ error: 'El campo correo_usuario es obligatorio' });
+      if (!rol) return res.status(400).json({ error: 'El campo rol es obligatorio' });
 
     
       // Verificar si el id existe en la base de datos
@@ -77,14 +77,16 @@ exports.AgregarUsuario = (req, res) => {
               return res.status(500).json({ error: 'Error al encriptar la contraseña' });
             }
     
+            // Añadir la contraseña encriptada al conjunto de campos a actualizar
             updateFields.push(`password = '${hashedPassword}'`);
     
+            // Realizar la actualización en la base de datos
             const sql = `UPDATE usuarios SET ${updateFields.join(', ')} WHERE id_usuario = ?`;
             req.db.query(sql, [id], (err, result) => {
               if (err) {
                 return res.status(500).json({ error: 'Error al actualizar el usuario' });
               }
-              
+    
               if (result.affectedRows > 0) {
                 res.status(200).json({ message: 'Usuario modificado exitosamente' });
               } else {
@@ -93,6 +95,7 @@ exports.AgregarUsuario = (req, res) => {
             });
           });
         } else {
+          // Si no se envió una nueva contraseña, solo actualizamos los otros campos
           const sql = `UPDATE usuarios SET ${updateFields.join(', ')} WHERE id_usuario = ?`;
           req.db.query(sql, [id], (err, result) => {
             if (err) {
