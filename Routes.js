@@ -24,6 +24,7 @@ router.put('/proyecto/:id', controller.ModificarProyecto); // Modificar un proye
 router.delete('/proyecto/:id', controller.EliminarProyecto); // Eliminar un proyecto por ID
 router.get('/proyectos', controller.ListarProyectos); // Listar todos los proyectos
 router.get('/proyecto/:id', controller.VerProyecto); // Proyecto unico
+router.get('/usuarios/:id/proyectos', controller.VerProyectosPorUsuario); //VerProyectosPorUsuario
 
 // Rutas para la entidad Contrapartes
 router.post('/contraparte', controller.AgregarContraparte); // Agregar una contraparte
@@ -38,6 +39,7 @@ router.put('/tarea/:id', controller.ModificarTarea); // Modificar una tarea por 
 router.delete('/tarea/:id', controller.EliminarTarea); // Eliminar una tarea por ID
 router.get('/tareas', controller.ListarTareas); // Listar todas las tareas
 router.get('/tarea/:id', controller.VerTarea); // Tarea unico
+router.get('/usuarios/:id/tareas', controller.VerTareasPorUsuario); //VerTareasPorUsuario
 
 // Rutas para la entidad Evaluaciones
 router.post('/evaluacion', controller.AgregarEvaluacion); // Agregar una evaluación

@@ -326,6 +326,22 @@ req.db.query(sql, [proyectoId], (err, results) => {
 };
 
 
+exports.VerProyectosPorUsuario = (req, res) => {
+  const usuarioId = req.params.id;
+
+  const sql = 'SELECT * FROM proyectos WHERE id_usuario = ?';
+  req.db.query(sql, [usuarioId], (err, results) => {
+    if (err) {
+      return res.status(500).send({ error: 'Error al obtener los proyectos' });
+    }
+    if (results.length === 0) {
+      return res.status(404).send({ error: 'No se encontraron proyectos para este usuario' });
+    }
+    res.status(200).send(results);
+  });
+};
+
+
 //-----------------------------TAREA-------------------------------------------
 // Agregar una tarea
 exports.AgregarTarea = (req, res) => {
@@ -443,6 +459,21 @@ req.db.query(sql, [tareaId], (err, results) => {
   }
   res.status(200).send(results[0]);
 });
+};
+
+exports.VerTareasPorUsuario = (req, res) => {
+  const usuarioId = req.params.id;
+
+  const sql = 'SELECT * FROM tareas WHERE id_usuario = ?';
+  req.db.query(sql, [usuarioId], (err, results) => {
+    if (err) {
+      return res.status(500).send({ error: 'Error al obtener las tareas' });
+    }
+    if (results.length === 0) {
+      return res.status(404).send({ error: 'No se encontraron tareas para este usuario' });
+    }
+    res.status(200).send(results);
+  });
 };
 
 
