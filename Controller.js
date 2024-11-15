@@ -566,7 +566,7 @@ exports.EliminarEvaluacion= (req, res) => {
 // Listar todas las evaluacion
 exports.ListarEvaluaciones = (req, res) => {
   const sql = `
-    SELECT e.id_evaluacion, id_usuario, u.nombre_usuario, e.estado, e.desempeño, e.comentarios, e.fecha_evaluacion, 
+    SELECT e.id_evaluacion, e.id_usuario, u.nombre_usuario, e.estado, e.desempeño, e.comentarios, e.fecha_evaluacion, 
            p.nombre_proyecto, t.nombre_tarea
     FROM evaluaciones e
     JOIN usuarios u ON e.id_usuario = u.id_usuario
