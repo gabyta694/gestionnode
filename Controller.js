@@ -493,10 +493,10 @@ exports.VerTareasPorUsuario = (req, res) => {
 //-----------------------------EVALUACION-------------------------------------------
 // Agregar una evaluacion
 exports.AgregarEvaluacion = (req, res) => {
-  const { id_evaluacion, id_usuario, id_proyecto, id_tarea, estado, desempeño, comentarios, fecha_evaluacion } = req.body;
+  const { id_usuario, id_proyecto, id_tarea, estado, desempeño, comentarios, fecha_evaluacion } = req.body;
   
   // Verificar si se proporcionan todos los campos
-  if (!id_evaluacion || !id_usuario || !id_proyecto || !id_tarea || !estado || !desempeño || !comentarios || !fecha_evaluacion) {
+  if (!id_usuario || !id_proyecto || !id_tarea || !estado || !desempeño || !comentarios || !fecha_evaluacion) {
     return res.status(400).json({ error: 'Faltan campos requeridos' });
   }
 
@@ -520,10 +520,10 @@ exports.AgregarEvaluacion = (req, res) => {
     }
 
     // Consulta de inserción
-    const sql = `INSERT INTO evaluaciones (id_evaluacion, id_usuario, id_proyecto, id_tarea, estado, desempeño, comentarios, fecha_evaluacion)
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+    const sql = `INSERT INTO evaluaciones (id_usuario, id_proyecto, id_tarea, estado, desempeño, comentarios, fecha_evaluacion)
+                 VALUES (?, ?, ?, ?, ?, ?, ?)`;
 
-    req.db.query(sql, [id_evaluacion, id_usuario, id_proyecto, id_tarea, estado, desempeño, comentarios, fecha_evaluacion], (err, result) => {
+    req.db.query(sql, [id_usuario, id_proyecto, id_tarea, estado, desempeño, comentarios, fecha_evaluacion], (err, result) => {
       if (err) {
         console.error('Error al insertar la evaluacion:', err);
         return res.status(500).json({ error: 'Error al agregar la evaluacion', details: err });
