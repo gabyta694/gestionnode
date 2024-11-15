@@ -2,7 +2,7 @@ const mysql = require('mysql');
 const bcrypt = require('bcryptjs');
 
 //-----------------------------USUARIO-------------------------------------------
-// Agregar un usuario
+// Agregar un usuario-
 exports.AgregarUsuario = (req, res) => {
   const { nombre_usuario, rut, dv, correo_usuario, password, rol } = req.body;
 
