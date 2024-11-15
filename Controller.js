@@ -521,7 +521,7 @@ exports.AgregarEvaluacion = (req, res) => {
 
     // Consulta de inserción
     const sql = `INSERT INTO evaluaciones (id_evaluacion, id_usuario, id_proyecto, id_tarea, estado, desempeño, comentarios, fecha_evaluacion)
-                 VALUES (?, ?, ?, ?, ?, ?, ?)`;
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
 
     req.db.query(sql, [id_evaluacion, id_usuario, id_proyecto, id_tarea, estado, desempeño, comentarios, fecha_evaluacion], (err, result) => {
       if (err) {
