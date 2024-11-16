@@ -56,6 +56,8 @@ router.get('/evaluacion/:id', controller.VerEvaluacion); // Evaluacion unico
 //router.get('/historial/:id', controller.VerHistorial); // Historial unico
 
 //Rutas adicionales
+router.get('/tareas/usuario/:id', controller.ContarTareasPorUsuario); // ContarTareasPorUsuario
+
 
 
 module.exports = router;

@@ -604,5 +604,23 @@ req.db.query(sql, [evaluacionId], (err, results) => {
 //-----------------------------HISTORIAL-------------------------------------------
 
 //----------------------------RUTAS ADICIONALES------------------------------------
+//ContarTareasPorUsuario
+exports.ContarTareasPorUsuario = (req, res) => {
+  //const db = req.db; // Obtenemos la conexión de MySQL del middleware global
+  const usuarioAsignado = req.params.id; // ID del usuario recibido en la URL
 
+  // Llamar al procedimiento almacenado
+  req.db.query('CALL ContarTareasPorUsuario(?)', [usuarioAsignado], (err, results) => {
+    if (err) {
+      console.error('Error ejecutando el procedimiento:', err);
+      return res.status(500).json({ error: 'Error ejecutando el procedimiento' });
+    }
+
+    // Enviar los resultados al cliente
+    res.json({
+      total_tareas: results[0], // Total de tareas
+      tareas_por_usuario: results[1], // Tareas por usuario
+    });
+  });
+};
 
