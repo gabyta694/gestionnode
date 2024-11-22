@@ -688,22 +688,24 @@ exports.ContarProyectosPorUsuario = (req, res) => {
 exports.ContarEvaluacionesPorUsuario = async (req, res) => {
   const usuarioAsignado = req.params.id;
   try {
+    // Ejecutar el procedimiento almacenado
     const [resultSets] = await req.db.query('CALL ContarEvaluacionesPorUsuario(?)', [usuarioAsignado]);
 
-    // Verifica y accede a los resultados
-    if (!resultSets || resultSets.length < 2) {
-      return res.status(500).json({ error: 'Formato inesperado de los datos devueltos por el procedimiento almacenado' });
+    // Revisar la estructura de los resultados devueltos
+    if (!resultSets || resultSets.length === 0) {
+      return res.status(500).json({ error: 'Formato inesperado de datos devueltos por el procedimiento almacenado' });
     }
 
-    // Los resultados suelen estar en dos conjuntos
-    const totalEvaluaciones = resultSets[0]; // Primer resultado: total de evaluaciones
-    const evaluacionesPorUsuario = resultSets[1]; // Segundo resultado: evaluaciones por usuario
+    // Los procedimientos almacenados suelen devolver múltiples conjuntos de resultados
+    const totalEvaluaciones = resultSets[0]?.[0]?.total_evaluaciones || 0; // Primer conjunto
+    const evaluacionesPorUsuario = resultSets[1] || []; // Segundo conjunto
 
-    res.json({ 
-      totalEvaluaciones, 
-      evaluacionesPorUsuario 
+    res.json({
+      totalEvaluaciones,
+      evaluacionesPorUsuario,
     });
   } catch (err) {
+    console.error('Error al ejecutar el procedimiento:', err.message);
     res.status(500).json({ error: err.message });
   }
 };
@@ -713,10 +715,25 @@ exports.ContarEvaluacionesPorUsuario = async (req, res) => {
 exports.PromedioDesempenoPorUsuario = async (req, res) => {
   const usuarioAsignado = req.params.id;
   try {
-      const [promedios] = await req.db.query('CALL PromedioDesempenoPorUsuario(?)', [usuarioAsignado]);
-      res.json({ promedios });
+    // Ejecutar el procedimiento almacenado
+    const [resultSets] = await req.db.query('CALL PromedioDesempenoPorUsuario(?)', [usuarioAsignado]);
+
+    // Revisar la estructura de los resultados devueltos
+    if (!resultSets || resultSets.length === 0) {
+      return res.status(500).json({ error: 'Formato inesperado de datos devueltos por el procedimiento almacenado' });
+    }
+
+    // Los procedimientos almacenados suelen devolver múltiples conjuntos de resultados
+    const promedioDesempenoTotal = resultSets[0]?.[0]?.promedio_desempeno_total || 0; // Primer conjunto
+    const promedioDesempenoPorUsuario = resultSets[1] || []; // Segundo conjunto
+
+    res.json({
+      promedioDesempenoTotal,
+      promedioDesempenoPorUsuario,
+    });
   } catch (err) {
-      res.status(500).json({ error: err.message });
+    console.error('Error al ejecutar el procedimiento:', err.message);
+    res.status(500).json({ error: err.message });
   }
 };
 
