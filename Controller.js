@@ -683,3 +683,26 @@ exports.ContarProyectosPorUsuario = (req, res) => {
     });
   });
 };
+
+// ContarEvaluacionesPorUsuario
+exports.ContarEvaluacionesPorUsuario = async (req, res) => {
+  const usuarioAsignado = req.params.id;
+  try {
+    const [totalEvaluaciones] = await req.db.query('CALL ContarEvaluacionesPorUsuario(?)', [usuarioAsignado]);
+    res.json({ totalEvaluaciones });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+//PromedioDesempenoPorUsuario
+exports.PromedioDesempenoPorUsuario = async (req, res) => {
+  const usuarioAsignado = req.params.id;
+  try {
+      const [promedios] = await db.query('CALL PromedioDesempenoPorUsuario(?)', [usuarioAsignado]);
+      res.json({ promedios });
+  } catch (err) {
+      res.status(500).json({ error: err.message });
+  }
+};
+
