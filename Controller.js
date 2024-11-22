@@ -688,18 +688,32 @@ exports.ContarProyectosPorUsuario = (req, res) => {
 exports.ContarEvaluacionesPorUsuario = async (req, res) => {
   const usuarioAsignado = req.params.id;
   try {
-    const [totalEvaluaciones] = await req.db.query('CALL ContarEvaluacionesPorUsuario(?)', [usuarioAsignado]);
-    res.json({ totalEvaluaciones });
+    const [resultSets] = await req.db.query('CALL ContarEvaluacionesPorUsuario(?)', [usuarioAsignado]);
+
+    // Verifica y accede a los resultados
+    if (!resultSets || resultSets.length < 2) {
+      return res.status(500).json({ error: 'Formato inesperado de los datos devueltos por el procedimiento almacenado' });
+    }
+
+    // Los resultados suelen estar en dos conjuntos
+    const totalEvaluaciones = resultSets[0]; // Primer resultado: total de evaluaciones
+    const evaluacionesPorUsuario = resultSets[1]; // Segundo resultado: evaluaciones por usuario
+
+    res.json({ 
+      totalEvaluaciones, 
+      evaluacionesPorUsuario 
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
+
 //PromedioDesempenoPorUsuario
 exports.PromedioDesempenoPorUsuario = async (req, res) => {
   const usuarioAsignado = req.params.id;
   try {
-      const [promedios] = await db.query('CALL PromedioDesempenoPorUsuario(?)', [usuarioAsignado]);
+      const [promedios] = await req.db.query('CALL PromedioDesempenoPorUsuario(?)', [usuarioAsignado]);
       res.json({ promedios });
   } catch (err) {
       res.status(500).json({ error: err.message });
