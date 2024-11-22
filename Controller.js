@@ -577,8 +577,7 @@ exports.EliminarEvaluacion= (req, res) => {
 
 // Listar todas las evaluacion
 exports.ListarEvaluaciones = (req, res) => {
-  const userRole = req.body.userRole;  // Asegúrate de pasar el rol del usuario en la solicitud
-  const userId = req.body.userId;  // Asegúrate de pasar el ID del usuario en la solicitud
+   const { userId, userRole } = req.query;
   
   let sql = `
     SELECT e.id_evaluacion, e.id_usuario, u.nombre_usuario, e.estado, e.desempeño, e.comentarios, e.fecha_evaluacion, 
@@ -590,11 +589,14 @@ exports.ListarEvaluaciones = (req, res) => {
   `;
 
   // Si el usuario es un administrador, no filtramos por id_usuario
-  if (userRole !== 'admin') {
+  if (userRole === 'normal') {
     sql += ` WHERE e.id_usuario = ?`;
   }
 
-  req.db.query(sql, [userId], (err, results) => {
+	// Parámetros dinámicos
+	const params = userRole === 'normal' ? [userId] : [];
+  
+  req.db.query(sql, params, (err, results) => {
     if (err) {
       console.error('Error al obtener las evaluaciones:', err);
       return res.status(500).send({ error: 'Error al obtener las evaluaciones', details: err });
