@@ -430,7 +430,10 @@ exports.EliminarTarea= (req, res) => {
 // Listar todas las tareas
 // Backend - Controlador de ListarTareas
 exports.ListarTareas = (req, res) => {
-  const sql = `
+  const { userId, userRole } = req.query;
+
+  // Construye la consulta base
+  let sql = `
     SELECT 
       tareas.id_tarea,
       tareas.nombre_tarea,
@@ -444,10 +447,15 @@ exports.ListarTareas = (req, res) => {
     FROM tareas
     LEFT JOIN proyectos ON tareas.id_proyecto = proyectos.id_proyecto
     LEFT JOIN usuarios ON tareas.id_usuario_asignado = usuarios.id_usuario
-    LEFT JOIN contrapartes ON tareas.id_contraparte_tarea = contrapartes.id_contraparte;
+    LEFT JOIN contrapartes ON tareas.id_contraparte_tarea = contrapartes.id_contraparte
   `;
 
-  req.db.query(sql, (err, result) => {
+  // Si el rol es "normal", filtra por el usuario asignado
+  if (userRole === 'normal') {
+    sql += ` WHERE tareas.id_usuario_asignado = ?`;
+  }
+
+  req.db.query(sql, userRole === 'normal' ? [userId] : [], (err, result) => {
     if (err) {
       console.error('Error al obtener tareas:', err);
       return res.status(500).send({ error: 'Error al obtener las tareas', details: err.message });
@@ -455,6 +463,7 @@ exports.ListarTareas = (req, res) => {
     res.status(200).send(result);
   });
 };
+
 
 
  // Ver una sola tarea
