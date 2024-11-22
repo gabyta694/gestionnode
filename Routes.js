@@ -57,7 +57,7 @@ router.get('/evaluacion/:id', controller.VerEvaluacion); // Evaluacion unico
 
 //Rutas adicionales
 router.get('/tareas/usuario/:id', controller.ContarTareasPorUsuario); // ContarTareasPorUsuario
-router.get('/contar-contrapartes/:usuarioId', controller.ContarContrapartesPorUsuario); //ContarContrapartesPorUsuario
-router.get('/contar-proyectos/:usuarioId', controller.ContarProyectosPorUsuario); //ContarProyectosPorUsuario
+router.get('/contar-contrapartes/:id', controller.ContarContrapartesPorUsuario); //ContarContrapartesPorUsuario
+router.get('/contar-proyectos/:id', controller.ContarProyectosPorUsuario); //ContarProyectosPorUsuario
 
 module.exports = router;
