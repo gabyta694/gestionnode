@@ -629,7 +629,6 @@ req.db.query(sql, [evaluacionId], (err, results) => {
 //----------------------------RUTAS ADICIONALES------------------------------------
 //ContarTareasPorUsuario
 exports.ContarTareasPorUsuario = (req, res) => {
-  //const db = req.db; // Obtenemos la conexión de MySQL del middleware global
   const usuarioAsignado = req.params.id; // ID del usuario recibido en la URL
 
   // Llamar al procedimiento almacenado
@@ -647,3 +646,40 @@ exports.ContarTareasPorUsuario = (req, res) => {
   });
 };
 
+//ContarContrapartesPorUsuario
+exports.ContarContrapartesPorUsuario = (req, res) => {
+  const usuarioAsignado = req.params.id;
+  
+  // Llamar al procedimiento ContarContrapartesPorUsuario
+  req.db.query('CALL ContarContrapartesPorUsuario(?)', [usuarioAsignado], (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    
+    // El resultado puede venir en dos partes: la total y la por usuario
+    res.json({
+      contrapartesTotal: results[0][0]?.total_contrapartes || 0,
+      contrapartesPorUsuario: results[1][0]?.contrapartes_por_usuario || 0
+    });
+  });
+};
+
+
+
+//  ContarProyectosPorUsuario
+exports.ContarProyectosPorUsuario = (req, res) => {
+  const usuarioAsignado = req.params.id;
+  
+  // Llamar al procedimiento ContarProyectosPorUsuario
+  req.db.query('CALL ContarProyectosPorUsuario(?)', [usuarioAsignado], (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    
+    // El resultado puede venir en dos partes: la total y la por usuario
+    res.json({
+      proyectosTotal: results[0][0]?.total_proyectos || 0,
+      proyectosPorUsuario: results[1][0]?.proyectos_por_usuario || 0
+    });
+  });
+};
