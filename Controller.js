@@ -428,11 +428,10 @@ exports.EliminarTarea= (req, res) => {
 
 
 // Listar todas las tareas
-// Backend - Controlador de ListarTareas
 exports.ListarTareas = (req, res) => {
   const { userId, userRole } = req.query;
 
-  // Construye la consulta base
+  // Construcción de la consulta SQL con filtro basado en el rol
   let sql = `
     SELECT 
       tareas.id_tarea,
@@ -450,12 +449,15 @@ exports.ListarTareas = (req, res) => {
     LEFT JOIN contrapartes ON tareas.id_contraparte_tarea = contrapartes.id_contraparte
   `;
 
-  // Si el rol es "normal", filtra por el usuario asignado
+  // Filtrar según el rol
   if (userRole === 'normal') {
     sql += ` WHERE tareas.id_usuario_asignado = ?`;
   }
 
-  req.db.query(sql, userRole === 'normal' ? [userId] : [], (err, result) => {
+  // Parámetros dinámicos
+  const params = userRole === 'normal' ? [userId] : [];
+
+  req.db.query(sql, params, (err, result) => {
     if (err) {
       console.error('Error al obtener tareas:', err);
       return res.status(500).send({ error: 'Error al obtener las tareas', details: err.message });
@@ -463,6 +465,7 @@ exports.ListarTareas = (req, res) => {
     res.status(200).send(result);
   });
 };
+
 
 
 
